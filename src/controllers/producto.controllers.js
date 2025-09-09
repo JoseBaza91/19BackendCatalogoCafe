@@ -1,16 +1,24 @@
-
+import Producto from "../models/productos.js";
 
 export const prueba = (req, res) => {
-    res.status(201);
-    res.send('Este es un mensaje desde el controlador')
- }
+  res.status(201);
+  res.send("Este es un mensaje desde el controlador");
+};
 
- export const crearProducto = async (req, res) => {
+export const crearProducto = async (req, res) => {
   try {
     //console.log(req),
-    console.log(req.body)
-    res.send('desde la logica de crear producto!')
+   
+    //1- validar los datos del req.body
+    //2- crear el producto en la base de datos
+    const productoNuevo = new Producto(req.body);
+    await productoNuevo.save();
+    //3- enviar el mensaje de respuesta
+    res.status(201).json({ mensaje: "El producto fue creado correctamente" });
   } catch (error) {
-    console.error(error)
+    console.error(error);
+    res
+      .status(500)
+      .json({ mensaje: "Error al crear el producto", error: error.message });
   }
-}
+};
